@@ -45,7 +45,7 @@ import type { StorySpecifier } from '../store/StoryIndexStore';
 const globalWindow = globalThis;
 
 function focusInInput(event: Event) {
-  const target = event.target as Element;
+  const target = event.composedPath()[0] as Element;
   return /input|textarea/i.test(target.tagName) || target.getAttribute('contenteditable') !== null;
 }
 
@@ -220,6 +220,7 @@ export class PreviewWithSelection<TFramework extends Renderer> extends Preview<T
     if (!this.storyRenders.find((r) => r.disableKeyListeners) && !focusInInput(event)) {
       // We have to pick off the keys of the event that we need on the other side
       const { altKey, ctrlKey, metaKey, shiftKey, key, code, keyCode } = event;
+      console.log('send keydown through channel');
       this.channel.emit(PREVIEW_KEYDOWN, {
         event: { altKey, ctrlKey, metaKey, shiftKey, key, code, keyCode },
       });
